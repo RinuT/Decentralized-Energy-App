@@ -1,0 +1,107 @@
+<html>
+<head>              
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  select{
+      display: inline;
+  }
+     body {font-family: Arial;}
+     div#envelope{
+     width: 70%;
+     margin: 10px 30% 10px 25%;
+     padding:10px 0;
+     border: 2px solid gray;
+     height: 120%;
+     }
+   
+   </style>
+</head>
+
+<body >
+<div ng-app="myApp" ng-controller="myCtrl" ng-init="loadEnergyAsset()">
+      <div id="envelope">
+        <h4><b> Energy Asset </b></h4>
+        <div>
+        <table id="table"style="width:100%">
+
+        <tr class="thead-cols">          
+            <th class="bc">Energy ID</th>        
+            <th class="bc" >Owner ID</th>       
+            <th class="bc" >Owner Entity</th>  
+            <th class="bc" >Units</th> 
+            <th class="bc">Value</th> 
+      </tr>
+        
+            <tr ng-repeat="energy in Energy">
+                <td><div ng-show="Energy[$index]">{{energy.energyID}}</div></td>           
+                <td><div ng-show="Energy[$index]">{{energy.ownerID}}</div></td>            
+                <td><div ng-show="Energy[$index]">{{energy.ownerEntity}}</div></td>
+                <td><div ng-show="Energy[$index]">{{energy.units}}</div></td>
+                <td><div ng-show="Energy[$index]">{{energy.value}}</div></td>
+            </tr>   
+            <!-- The Modal -->
+                      <!-- <td><input type="text" id="energyID" ng-model="energyID" /></td>
+                      <td><input type="text" ng-model="ownerID" id="ownerID" /></td>
+                      <td><input type="text" ng-model="ownerEntity" id="ownerEntity"/></td>
+                      <td><input type="text" ng-model="units" /></td>
+                      <td><input type="text" ng-model="energyValue" /></td> -->
+      </table>
+        </div>
+</div>
+</body>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl',['$scope','$http','$timeout',function ($scope,$http,$timeout) {
+
+        $scope.Energy = []
+
+$scope.loadEnergyAsset = function() {
+    //    var requestDisplayCoins={
+    //      "$class": "org.decentralized.energy.network.Coins",
+    //       "coinsID":"CO_" + $scope.coinsID,
+    //       "value":$scope.coinValue,
+    //       "ownerID":$scope.ownerID,
+    //       "ownerEntity":$scope.ownerEntity
+    // };
+
+    var requestInfo = Request();
+     data : requestInfo
+  var res = $http.get('http://ec2-35-173-231-185.compute-1.amazonaws.com:3000/api/Energy').then((function(data,status,
+headers,config) {
+console.log("success");
+for(var i=0;i<data.data.length;i++){
+$scope.Energy.push(data.data[i]);
+console.log($scope.Energy)
+}
+}),(function(data,status,headers,config) {
+   
+alert( "cannot display data");
+}));
+}
+function Request() {
+ 
+ return {
+ "$class": "org.decentralized.energy.network.Resident",
+ "residentID": "",
+ "firstName": "",
+ "lastName": "",
+ "coins": "",
+ "cash": "",
+ "energy": ""
+ }
+ };
+
+
+
+    }]);
+ 
+</script>
+ 
+</html>

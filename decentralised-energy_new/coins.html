@@ -1,0 +1,104 @@
+<html>
+<head>              
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  select{
+      display: inline;
+  }
+     body {font-family: Arial;}
+     div#envelope{
+     width: 70%;
+     margin: 10px 30% 10px 25%;
+     padding:10px 0;
+     border: 2px solid gray;
+     height: 120%;
+     }
+   
+   </style>
+</head>
+
+<body >
+<div ng-app="myApp" ng-controller="myCtrl" ng-init="loadCoinsAsset()">
+      <div id="envelope">
+        <h4><b> Coins Asset </b></h4>
+        <div>
+        <table id="table"style="width:100%">
+
+        <tr class="thead-cols">          
+            <th class="bc">Coins ID</th>        
+            <th class="bc" >Owner ID</th>       
+            <th class="bc" >Owner Entity</th>  
+            <th class="bc">Value</th> 
+      </tr>
+        
+            <tr ng-repeat="coin in Coins">
+                <td><div ng-show="Coins[$index]">{{coin.coinsID}}</div></td>           
+                <td><div ng-show="Coins[$index]">{{coin.ownerID}}</div></td>            
+                <td><div ng-show="Coins[$index]">{{coin.ownerEntity}}</div></td>
+                <td><div ng-show="Coins[$index]">{{coin.value}}</div></td>
+            </tr>   
+<!-- The Modal -->
+          <!-- <td><input type="text" id="coinsID" ng-model="coinsID"/></td>
+          <td><input type="text" ng-model="ownerID" id="ownerID" /></td>
+          <td><input type="text" ng-model="ownerEntity" id="ownerEntity"/></td>
+          <td><input type="text" ng-model="coinValue" /></td> -->
+      </table>
+        </div>
+</div>
+</body>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl',['$scope','$http','$timeout',function ($scope,$http,$timeout) {
+
+        $scope.Coins = []
+
+$scope.loadCoinsAsset = function() {
+    //    var requestDisplayCoins={
+    //      "$class": "org.decentralized.energy.network.Coins",
+    //       "coinsID":"CO_" + $scope.coinsID,
+    //       "value":$scope.coinValue,
+    //       "ownerID":$scope.ownerID,
+    //       "ownerEntity":$scope.ownerEntity
+    // };
+
+    var requestInfo = Request();
+     data : requestInfo
+  var res = $http.get('http://ec2-35-173-231-185.compute-1.amazonaws.com:3000/api/Coins').then((function(data,status,
+headers,config) {
+console.log("success");
+for(var i=0;i<data.data.length;i++){
+$scope.Coins.push(data.data[i]);
+console.log($scope.Coins)
+}
+}),(function(data,status,headers,config) {
+   
+alert( "cannot display data");
+}));
+}
+function Request() {
+ 
+ return {
+ "$class": "org.decentralized.energy.network.Resident",
+ "residentID": "",
+ "firstName": "",
+ "lastName": "",
+ "coins": "",
+ "cash": "",
+ "energy": ""
+ }
+ };
+
+
+
+    }]);
+ 
+</script>
+ 
+</html>
